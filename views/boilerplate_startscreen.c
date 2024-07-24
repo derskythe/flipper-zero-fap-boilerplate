@@ -26,7 +26,7 @@ void boilerplate_startscreen_set_callback(
 
 void boilerplate_startscreen_draw(Canvas* canvas, BoilerplateStartscreenModel* model) {
     UNUSED(model);
-    char buffer[64];
+    char buffer[64] = {0};
     canvas_clear(canvas);
     canvas_set_color(canvas, ColorBlack);
     canvas_set_font(canvas, FontPrimary);
@@ -36,7 +36,11 @@ void boilerplate_startscreen_draw(Canvas* canvas, BoilerplateStartscreenModel* m
     canvas_draw_str_aligned(canvas, 64, 32, AlignCenter, AlignTop, "on this screen");
     snprintf(buffer, sizeof(buffer), "Version: %s", BOILERPLATE_VERSION);
     canvas_draw_str_aligned(canvas, 64, 42, AlignCenter, AlignTop, buffer);
+    elements_button_up(canvas, "Up");
+    elements_button_down(canvas, "Down");
     elements_button_center(canvas, "Start");
+    elements_button_left(canvas, "Left");
+    elements_button_right(canvas, "Right");
 }
 
 static void boilerplate_startscreen_model_init(BoilerplateStartscreenModel* const model) {
@@ -115,8 +119,7 @@ BoilerplateStartscreen* boilerplate_startscreen_alloc() {
 void boilerplate_startscreen_free(BoilerplateStartscreen* instance) {
     furi_assert(instance);
 
-    with_view_model(
-        instance->view, BoilerplateStartscreenModel * model, { UNUSED(model); }, true);
+    with_view_model(instance->view, BoilerplateStartscreenModel * model, { UNUSED(model); }, true);
     view_free(instance->view);
     free(instance);
 }
