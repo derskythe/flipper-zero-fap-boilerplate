@@ -29,7 +29,6 @@ Boilerplate* boilerplate_app_alloc() {
 
     //Scene additions
     app->view_dispatcher = view_dispatcher_alloc();
-    view_dispatcher_enable_queue(app->view_dispatcher);
 
     app->scene_manager = scene_manager_alloc(&boilerplate_scene_handlers, app);
     view_dispatcher_set_event_callback_context(app->view_dispatcher, app);
@@ -81,6 +80,18 @@ Boilerplate* boilerplate_app_alloc() {
         BoilerplateViewIdSettings,
         variable_item_list_get_view(app->variable_item_list));
 
+    app->text_input = text_input_alloc();
+    view_dispatcher_add_view(
+        app->view_dispatcher, 
+        BoilerplateViewIdTextInput, 
+        text_input_get_view(app->text_input));
+
+    app->number_input = number_input_alloc();
+    view_dispatcher_add_view(
+        app->view_dispatcher,
+        BoilerplateViewIdNumberInput,
+        number_input_get_view(app->number_input));
+
     //End Scene Additions
 
     return app;
@@ -104,6 +115,12 @@ void boilerplate_app_free(Boilerplate* app) {
     boilerplate_scene_1_free(app->boilerplate_scene_1);
     boilerplate_scene_2_free(app->boilerplate_scene_2);
     boilerplate_startscreen_free(app->boilerplate_startscreen);
+
+    view_dispatcher_remove_view(app->view_dispatcher, BoilerplateViewIdNumberInput);
+    number_input_free(app->number_input);
+
+    view_dispatcher_remove_view(app->view_dispatcher, BoilerplateViewIdTextInput);
+    text_input_free(app->text_input);
 
     view_dispatcher_free(app->view_dispatcher);
 
